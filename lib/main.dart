@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 
 void main() {
-  String name = "nouhaila";
+  
   runApp(
-    const MaterialApp(
-      home: Center(
-        child: Text("hello world"),
+     MaterialApp(
+      home: Scaffold(
+        appBar: AppBar(
+          title:Text("MenYOU"),
+          backgroundColor: Colors.orange[900],
+        ),
       ),
     ),
   );
