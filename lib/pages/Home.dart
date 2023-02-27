@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:menyou/models/Categorie.dart';
+import 'package:menyou/models/Resteau.dart';
 import 'package:menyou/widgets/Categories.dart';
+import 'package:menyou/widgets/Restaurants.dart';
 
 class Home extends StatelessWidget {
   @override
@@ -50,14 +52,14 @@ class Home extends StatelessWidget {
                   child: Container(
                 padding: EdgeInsets.symmetric(horizontal: 10.0),
                 decoration: BoxDecoration(
-                    color: Colors.grey.shade200,
+                    color: Colors.grey.shade100,
                     borderRadius: BorderRadius.circular(25),
-                    border: Border.all(color: Colors.red.shade100),
+                    border: Border.all(color: Colors.yellowAccent),
                     boxShadow: [
                       BoxShadow(
                           offset: Offset(0, 5),
                           blurRadius: 25,
-                          color: Colors.red.shade100)
+                          color: Colors.amber.shade100)
                     ]),
                 child: TextField(
                     decoration: InputDecoration(
@@ -71,22 +73,67 @@ class Home extends StatelessWidget {
               Container(
                 child: Icon(
                   Icons.menu_open,
-                  color: Colors.red,
+                  color: Colors.amberAccent,
+                  size: 50.0,
                 ),
               ),
             ]),
           ),
-          Expanded(
-            child: ListView.builder(
-              shrinkWrap: true,
-              scrollDirection: Axis.horizontal,
-              itemCount: 10,
-              itemBuilder: (context, index) {
-                return Categories();
-              },
+          Container(
+            constraints: BoxConstraints(
+              maxHeight: 160,
+            ),
+            child: Expanded(
+              child: ListView.builder(
+                shrinkWrap: true,
+                scrollDirection: Axis.horizontal,
+                itemCount: categories.length,
+                itemBuilder: (context, index) {
+                  return Categories(categories[index].id);
+                },
+              ),
             ),
           ),
+          Container(
+            height: 300.0,
+            width: MediaQuery.of(context).size.width,
+            child: Expanded(
+              child: ListView.builder(
+                shrinkWrap: true,
+                scrollDirection: Axis.vertical,
+                itemCount: resteaux.length,
+                itemBuilder: (context, index) {
+                  return Restaurants(resteaux[index].id);
+                },
+              ),
+            ),
+          )
         ]),
+        bottomNavigationBar: BottomNavigationBar(
+          selectedItemColor: Colors.redAccent,
+          currentIndex: 0,
+          unselectedItemColor: Colors.grey,
+          selectedFontSize: 14,
+          unselectedFontSize: 12,
+          showSelectedLabels: true,
+          type: BottomNavigationBarType.fixed,
+          items: [
+            BottomNavigationBarItem(
+              icon: Icon(Icons.notifications),
+              label: 'notifications'
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.restaurant_menu_sharp),
+              label: 'menu'
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.shopping_basket),
+              label: 'panier'
+             
+            ),
+            
+          ],
+        ),
       ),
     );
   }

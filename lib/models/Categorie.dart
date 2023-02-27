@@ -7,7 +7,7 @@ class Categorie {
 }
 
 List<Categorie> categories = [
-  Categorie(1, "pizzirea", "image"),
-  Categorie(2, "plats traditionnel", "images/OIP.jpg"),
-  Categorie(3, "plats asiatiques", "image")
+  Categorie(1, "pizzirea", "images/pizza.png"),
+  Categorie(2, "plats traditionnel", "images/trad.png"),
+  Categorie(3, "plats asiatiques", "images/assiatic.png")
 ];
