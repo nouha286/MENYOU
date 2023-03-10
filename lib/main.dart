@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:menyou/models/Categorie.dart';
 import 'package:menyou/models/Resteau.dart';
 import 'package:menyou/pages/Home.dart';
+import 'package:menyou/pages/Menu_resteau.dart';
 
 void main() {
   runApp(
@@ -16,8 +17,14 @@ class MyApp extends StatelessWidget {
 
     return MaterialApp(
       title: 'MenYOU',
+       initialRoute: '/',
       theme: ThemeData(),
-      home: Home(),
+   
+      routes: {
+        '/':(context) => Home(),
+        '/home':(context) => Home(),
+        '/Menu':(context) => Menu_resteau()
+      },
     );
   }
 }

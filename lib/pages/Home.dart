@@ -1,14 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:menyou/models/Categorie.dart';
 import 'package:menyou/models/Resteau.dart';
+import 'package:menyou/pages/Menu_resteau.dart';
 import 'package:menyou/widgets/Categories.dart';
 import 'package:menyou/widgets/Restaurants.dart';
+import 'package:menyou/widgets/sideBar.dart';
 
 class Home extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Scaffold(
+    GlobalKey<ScaffoldState> KeyDrawer = GlobalKey();
+
+    return  Scaffold(
+        key: KeyDrawer,
+        endDrawer: sideBar(),
         body: Column(children: [
           AppBar(
             backgroundColor: Colors.transparent,
@@ -71,10 +76,15 @@ class Home extends StatelessWidget {
                 width: 10.0,
               ),
               Container(
-                child: Icon(
-                  Icons.menu_open,
-                  color: Colors.amberAccent,
-                  size: 50.0,
+                child: GestureDetector(
+                  onTap: () {
+                    KeyDrawer.currentState?.openEndDrawer();
+                  },
+                  child: Icon(
+                    Icons.menu_open,
+                    color: Colors.amberAccent,
+                    size: 50.0,
+                  ),
                 ),
               ),
             ]),
@@ -94,17 +104,23 @@ class Home extends StatelessWidget {
               ),
             ),
           ),
-          Container(
-            height: 300.0,
-            width: MediaQuery.of(context).size.width,
-            child: Expanded(
-              child: ListView.builder(
-                shrinkWrap: true,
-                scrollDirection: Axis.vertical,
-                itemCount: resteaux.length,
-                itemBuilder: (context, index) {
-                  return Restaurants(resteaux[index].id);
-                },
+          MaterialButton(
+            onPressed: () {
+              Navigator.pushNamed(
+                  context,'/Menu');
+            },
+            child: Container(
+              height: 300.0,
+              width: MediaQuery.of(context).size.width,
+              child: Expanded(
+                child: ListView.builder(
+                  shrinkWrap: true,
+                  scrollDirection: Axis.vertical,
+                  itemCount: resteaux.length,
+                  itemBuilder: (context, index) {
+                    return Restaurants(resteaux[index].id);
+                  },
+                ),
               ),
             ),
           )
@@ -119,22 +135,14 @@ class Home extends StatelessWidget {
           type: BottomNavigationBarType.fixed,
           items: [
             BottomNavigationBarItem(
-              icon: Icon(Icons.notifications),
-              label: 'notifications'
-            ),
+                icon: Icon(Icons.notifications), label: 'notifications'),
             BottomNavigationBarItem(
-              icon: Icon(Icons.restaurant_menu_sharp),
-              label: 'menu'
-            ),
+                icon: Icon(Icons.restaurant_menu_sharp), label: 'menu'),
             BottomNavigationBarItem(
-              icon: Icon(Icons.shopping_basket),
-              label: 'panier'
-             
-            ),
-            
+                icon: Icon(Icons.shopping_basket), label: 'panier'),
           ],
         ),
-      ),
-    );
+      )
+    ;
   }
 }
