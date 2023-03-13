@@ -9,7 +9,7 @@ class sideBar extends StatelessWidget {
           Container(
             padding: EdgeInsets.symmetric(horizontal: 10.0),
             child: InkWell(
-              onTap: () {},
+              onTap: () {Navigator.pushNamed(context, '/Home');},
               child: ListTile(
                 title: Text(
                   "Page principale",

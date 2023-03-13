@@ -5,29 +5,28 @@ import 'package:menyou/models/Categorie.dart';
 import 'package:menyou/models/Resteau.dart';
 
 class Categories extends StatelessWidget {
-  final int id;
-  Categories(this.id);
+  
+  final String nom;
+  final String image;
+  Categories({required this.image, required this.nom});
   @override
   Widget build(BuildContext context) {
     return Container(
-
-      
       margin: EdgeInsets.symmetric(horizontal: 10.0),
       child: Column(
         children: [
           Container(
-            height:  140.0,
-           
+            height: 140.0,
             padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 5.0),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(22),
               color: Colors.white,
             ),
-            child: Image.asset(categories[this.id - 1].image),
+            child: Image.asset(this.image),
           ),
           Container(
             child: Text(
-              categories[this.id - 1].nom,
+              this.nom,
               style: TextStyle(
                 fontWeight: FontWeight.bold,
               ),
