@@ -20,7 +20,7 @@ class SqlDb {
 
   initialDb() async {
     String databasepath = await getDatabasesPath();
-    String path = join(databasepath, 'MyResteau.db');
+    String path = join(databasepath, 'testeur.db');
     Database mydb = await openDatabase(path,
         onCreate: _onCreate, version: 3, onUpgrade: _onUpgrade);
     return mydb;
@@ -52,6 +52,7 @@ class SqlDb {
    ingredient TEXT,
    image TEXT,
    resteau_id INTEGER,
+   prix REAL,
   
   FOREIGN KEY (resteau_id) REFERENCES Resteau(id)
   )''');
@@ -99,17 +100,26 @@ class SqlDb {
 //*************************************************************************************/
 
     await this.insertData(
-        '''INSERT INTO Plat (classification, nom, ingredient, image, resteau_id)
-VALUES ('${Classification.Entree}', 'Salade Cesar', 'Laitue romaine, croûtons, poulet grillé, sauce Cesar', 'images/salade.jpg', 1);
+        '''INSERT INTO Plat (classification, nom, ingredient, image, resteau_id, prix)
+VALUES ('${Classification.Entree}', 'Salade Cesar', 'Laitue romaine, croûtons, poulet grillé, sauce Cesar', 'images/sal.jpg', 1, 100.0);
 ''');
 
     await this.insertData(
-        '''INSERT INTO Plat (classification, nom, ingredient, image, resteau_id)
-VALUES ('${Classification.Entree}', 'Salade Cesar', 'Laitue romaine, croûtons, poulet grillé, sauce Cesar', 'images/salade.jpg', 2);
+        '''INSERT INTO Plat (classification, nom, ingredient, image, resteau_id, prix)
+VALUES ('${Classification.Entree}', 'Salade Cesar', 'Laitue romaine, croûtons, poulet grillé, sauce Cesar', 'images/seffa.jpg', 2, 300.0);
+''');
+
+    await this.insertData(
+        '''INSERT INTO Plat (classification, nom, ingredient, image, resteau_id, prix)
+VALUES ('${Classification.Entree}', 'Salade Cesar', 'Laitue romaine, croûtons, poulet grillé, sauce Cesar', 'images/Kouskous.jpg', 2, 100.0);
 ''');
     await this.insertData(
-        '''INSERT INTO Plat (classification, nom, ingredient, image, resteau_id)
-VALUES ('${Classification.Entree}', 'Salade Cesar', 'Laitue romaine, croûtons, poulet grillé, sauce Cesar', 'images/pizza.png', 1);
+        '''INSERT INTO Plat (classification, nom, ingredient, image, resteau_id, prix)
+VALUES ('${Classification.Entree}', 'Salade Cesar', 'Laitue romaine, croûtons, poulet grillé, sauce Cesar', 'images/hum.jpg', 1, 100.0);
+''');
+    await this.insertData(
+        '''INSERT INTO Plat (classification, nom, ingredient, image, resteau_id, prix)
+VALUES ('${Classification.Entree}', 'Salade Cesar', 'Laitue romaine, croûtons, poulet grillé, sauce Cesar', 'images/sal.jpg', 1, 100.0);
 ''');
     print("added succefuly");
   }

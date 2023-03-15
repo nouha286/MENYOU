@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:menyou/database/SqlDb.dart';
+import 'package:menyou/models/Plat.dart';
+import 'package:menyou/pages/DetailsPlat.dart';
+import 'package:menyou/widgets/BottomNavigation.dart';
+import 'package:menyou/widgets/Search.dart';
 import 'package:menyou/widgets/TextBadge.dart';
 
 class Menu_resteau extends StatelessWidget {
@@ -10,10 +14,11 @@ class Menu_resteau extends StatelessWidget {
   Widget build(BuildContext context) {
     SqlDb sqlDb = SqlDb();
 
-    Future<List<Map>> readData() async {
-      List<Map> reponse = await sqlDb
+    Future<List<Plat>> getPlat() async {
+      final List<Map<String, dynamic>> response = await sqlDb
           .readData("SELECT * FROM Plat WHERE resteau_id=${this.id_resteau}");
-      return reponse;
+
+      return response.map((response) => Plat.fromJson(response)).toList();
     }
 
     return Container(
@@ -32,96 +37,132 @@ class Menu_resteau extends StatelessWidget {
         ),
         body: Column(
           children: [
-            Container(
-              padding: EdgeInsets.all(15.0),
-              child: Row(children: [
-                Expanded(
-                    child: Container(
-                  padding: EdgeInsets.symmetric(horizontal: 10.0),
-                  decoration: BoxDecoration(
-                      color: Colors.grey.shade100,
-                      borderRadius: BorderRadius.circular(25),
-                      border: Border.all(color: Colors.yellowAccent),
-                      boxShadow: [
-                        BoxShadow(
-                            offset: Offset(0, 5),
-                            blurRadius: 25,
-                            color: Colors.amber.shade100)
-                      ]),
-                  child: TextField(
-                      decoration: InputDecoration(
-                          hintText: 'Search ...',
-                          border: InputBorder.none,
-                          suffixIcon: Icon(Icons.search))),
-                )),
-              ]),
-            ),
+            Search(),
             Container(
               height: 500,
-              child: FutureBuilder(
-                  future: readData(),
-                  builder:
-                      (BuildContext ctx, AsyncSnapshot<List<Map>> snapshot) {
+              child: FutureBuilder<List<Plat>>(
+                  future: getPlat(),
+                  builder: (context, snapshot) {
                     return snapshot.hasData
                         ? ListView.builder(
                             shrinkWrap: true,
                             scrollDirection: Axis.vertical,
                             itemCount: snapshot.data!.length,
                             itemBuilder: (BuildContext context, index) {
+                              final plat = snapshot.data![index];
                               return MaterialButton(
-                                onPressed: () {
-                                  Navigator.pushNamed(context, '/FoodDetailsPage');
-                                },
-                                child: Padding(
-                                  padding: EdgeInsets.only(
-                                      top: 40, bottom: 0, left: 10, right: 10),
+                                  onPressed: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => PlatDetailsPage(
+                                                id: plat.id,
+                                                nom: plat.nom,
+                                                ingredient: snapshot
+                                                    .data![index].ingredient,
+                                                classification: snapshot
+                                                    .data![index]
+                                                    .classification,
+                                                resteau_id: snapshot
+                                                    .data![index].resteau_id,
+                                                prix: plat.prix,
+                                                image: plat.image,
+                                              )),
+                                    );
+                                  },
                                   child: Container(
-                                    margin: EdgeInsets.symmetric(vertical: 30),
-                                    child: new Stack(
-                                      children: <Widget>[
-                                        Card(
-                                            elevation: 10, // Change this
-                                            shadowColor: Colors.redAccent,
-                                            child: Container(
-                                              padding: EdgeInsets.only(
-                                                  top: 60, bottom: 20),
-                                              child: ListTile(
-                                                title: Text(
-                                                    '${snapshot.data![index]['nom']}'),
-                                                subtitle: Text(
-                                                    '${snapshot.data![index]['ingredient']}'),
-                                                trailing: TextBadge(
-                                                  text: snapshot.data![index]
-                                                          ['classification']
-                                                      .toString(),
-                                                  color: Colors.redAccent,
-                                                  borderRadius: 60,
-                                                  textStyle: TextStyle(
-                                                    fontSize: 14,
-                                                    fontWeight: FontWeight.bold,
-                                                    color: Colors.white,
-                                                    letterSpacing: 1,
-                                                  ),
-                                                ),
-                                              ),
-                                            )),
-                                        FractionalTranslation(
-                                          translation: Offset(0.0, -0.4),
-                                          child: Align(
-                                            child: CircleAvatar(
-                                              backgroundImage: AssetImage(
-                                                  '${snapshot.data![index]['image']}'),
-                                              radius: 50,
-                                            ),
-                                            alignment:
-                                                FractionalOffset(0.5, 0.0),
+                                    decoration: BoxDecoration(
+                                        color: Colors.white,
+                                        borderRadius: BorderRadius.circular(30),
+                                        border: Border.all(color: Colors.red),
+                                        boxShadow: [
+                                          BoxShadow(
+                                              offset: Offset(3, 7),
+                                              blurRadius: 25,
+                                              color: Colors.black38)
+                                        ]),
+                                    margin: EdgeInsets.only(bottom: 10),
+                                    padding: EdgeInsets.all(10.0),
+                                    child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Container(
+                                            width: MediaQuery.of(context)
+                                                .size
+                                                .width,
+                                            height: MediaQuery.of(context)
+                                                    .size
+                                                    .height /
+                                                6,
+                                            decoration: BoxDecoration(
+                                                borderRadius:
+                                                    BorderRadius.circular(16.0),
+                                                image: DecorationImage(
+                                                    fit: BoxFit.cover,
+                                                    image: AssetImage(snapshot
+                                                        .data![index].image))),
                                           ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                              );
+                                          SizedBox(
+                                            height: 6,
+                                          ),
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              Text('${plat.nom}',
+                                                  style: TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      fontSize: 20.0,
+                                                      color: Colors.redAccent)),
+                                              Text('${plat.prix}',
+                                                  style: TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      fontSize: 16.0)),
+                                            ],
+                                          ),
+                                          SizedBox(
+                                            height: 6,
+                                          ),
+                                          Text(
+                                            plat.ingredient,
+                                            style:
+                                                TextStyle(color: Colors.grey),
+                                          ),
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.end,
+                                            children: [
+                                              TextBadge(
+                                                text: snapshot
+                                                    .data![index].classification
+                                                    .toString()
+                                                    .split('.')
+                                                    .last,
+                                                color: Colors.red,
+                                                borderRadius: 20,
+                                                textStyle: TextStyle(
+                                                  fontSize: 14,
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Colors.white,
+                                                  letterSpacing: 1,
+                                                ),
+                                              )
+                                            ],
+                                          ),
+                                          Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: [
+                                                Icon(
+                                                  Icons.keyboard_arrow_down,
+                                                  color: Colors.redAccent,
+                                                ),
+                                              ]),
+                                        ]),
+                                  ));
                             },
                           )
                         : Center(
@@ -131,6 +172,7 @@ class Menu_resteau extends StatelessWidget {
             ),
           ],
         ),
+        bottomNavigationBar: BottomNavigation(),
       ),
     );
   }

@@ -9,7 +9,9 @@ class sideBar extends StatelessWidget {
           Container(
             padding: EdgeInsets.symmetric(horizontal: 10.0),
             child: InkWell(
-              onTap: () {Navigator.pushNamed(context, '/Home');},
+              onTap: () {
+                Navigator.pushNamed(context, '/Home');
+              },
               child: ListTile(
                 title: Text(
                   "Page principale",
@@ -18,7 +20,7 @@ class sideBar extends StatelessWidget {
                 leading: Icon(
                   Icons.home,
                   color: Colors.redAccent,
-                   size: 30.0,
+                  size: 30.0,
                 ),
                 trailing: Icon(
                   Icons.arrow_forward_ios,
@@ -33,7 +35,9 @@ class sideBar extends StatelessWidget {
           Container(
             padding: EdgeInsets.symmetric(horizontal: 10.0),
             child: InkWell(
-              onTap: () {},
+              onTap: () {
+                Navigator.pushNamed(context, '/Favoris');
+              },
               child: ListTile(
                 title: Text(
                   "Favoris",
@@ -42,7 +46,7 @@ class sideBar extends StatelessWidget {
                 leading: Icon(
                   Icons.favorite,
                   color: Colors.redAccent,
-                   size: 30.0,
+                  size: 30.0,
                 ),
                 trailing: Icon(
                   Icons.arrow_forward_ios,
@@ -66,12 +70,11 @@ class sideBar extends StatelessWidget {
                 leading: Icon(
                   Icons.attach_money,
                   color: Colors.redAccent,
-                   size: 30.0,
+                  size: 30.0,
                 ),
                 trailing: Icon(
                   Icons.arrow_forward_ios,
                   color: Colors.redAccent,
-                 
                 ),
               ),
             ),

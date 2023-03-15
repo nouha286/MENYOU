@@ -6,15 +6,14 @@ class Resteau {
   String ville;
   String nom;
   String description;
-  Categorie categorie;
+  int categorie_id;
   String image;
 
   Resteau(this.id, this.adresse, this.description, this.nom, this.ville,
-      this.categorie, this.image);
-}
+      this.categorie_id, this.image);
 
-List<Resteau> resteaux = [
-  Resteau(1, "test", "test", "sushia", "test", Categorie(1, "nom", "image"),'images/sushia.jpg'),
-  Resteau(2, "test", "test", "ferkous", "test", Categorie(1, "nom", "image"),'images/maroc.jpg'),
-  Resteau(3, "test", "test", "Macdo", "test", Categorie(1, "nom", "image"),'images/mcdo.jpg'),
-];
+  factory Resteau.fromJson(Map<String, dynamic> json) {
+    return Resteau(json['id'], json['adresse'], json['description'],
+        json['nom'], json['ville'], json['category_id'], json['image']);
+  }
+}

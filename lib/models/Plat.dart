@@ -7,10 +7,17 @@ class Plat {
   int id;
   String nom;
   String ingredient;
-  Classification classification;
-  Resteau resteau;
+  String classification;
+  int resteau_id;
   String image;
-  Plat(this.id, this.nom, this.ingredient, this.image, this.classification, this.resteau);
+  double prix;
+  Plat(this.id, this.nom, this.ingredient, this.image, this.classification,
+      this.resteau_id, this.prix);
+
+  factory Plat.fromJson(Map<String, dynamic> json) {
+    return Plat(json['id'], json['nom'], json['ingredient'], json['image'],
+        json['classification'], json['resteau_id'], json['prix']);
+  }
 }
 
 // Plat plat = Plat(1, "nom", "ingredient", "image", Classification.Boisson);

@@ -3,9 +3,12 @@ import 'package:menyou/database/SqlDb.dart';
 import 'package:menyou/models/Categorie.dart';
 import 'package:menyou/models/Resteau.dart';
 import 'package:menyou/pages/Menu_resteau.dart';
+import 'package:menyou/widgets/BottomNavigation.dart';
 import 'package:menyou/widgets/Categories.dart';
 import 'package:menyou/widgets/Restaurants.dart';
+import 'package:menyou/widgets/Search.dart';
 import 'package:menyou/widgets/Select.dart';
+import 'package:menyou/widgets/appBar.dart';
 import 'package:menyou/widgets/sideBar.dart';
 
 class Home extends StatelessWidget {
@@ -24,10 +27,11 @@ class Home extends StatelessWidget {
       return stringList;
     }
 
-    Future<List<Map>> getResteau() async {
-      List<Map> restaux = await sqlDb.readData("SELECT *  FROM Resteau");
+    Future<List<Resteau>> getResteau() async {
+      final List<Map<String, dynamic>> resteaux =
+          await sqlDb.readData("SELECT *  FROM Resteau");
 
-      return restaux;
+      return resteaux.map((resteaux) => Resteau.fromJson(resteaux)).toList();
     }
 
     Future<List<Map>> getCategories() async {
@@ -39,160 +43,116 @@ class Home extends StatelessWidget {
     return Scaffold(
       key: KeyDrawer,
       endDrawer: sideBar(),
-      body: Column(children: [
-        AppBar(
-          backgroundColor: Colors.transparent,
-          centerTitle: true,
-//        backgroundColor: Color(0xFF0077ED),
-          elevation: 0.0,
-          title: new Text("Menyou",
-              style: const TextStyle(
-                  color: Color.fromARGB(255, 98, 98, 98),
-                  fontWeight: FontWeight.w500,
-                  fontStyle: FontStyle.normal,
-                  fontSize: 19.0)),
-        ),
-        Padding(
-          padding: EdgeInsets.symmetric(horizontal: 10.0),
-          child: InputSelect(
-            hintText: 'Select an option',
-            options: readData(),
-            onChanged: (String newValue) {},
-          ),
-        ),
-        Container(
-          padding: EdgeInsets.all(15.0),
-          child: Row(children: [
-            Expanded(
-                child: Container(
-              padding: EdgeInsets.symmetric(horizontal: 10.0),
-              decoration: BoxDecoration(
-                  color: Colors.grey.shade100,
-                  borderRadius: BorderRadius.circular(25),
-                  border: Border.all(color: Colors.yellowAccent),
-                  boxShadow: [
-                    BoxShadow(
-                        offset: Offset(0, 5),
-                        blurRadius: 25,
-                        color: Colors.amber.shade100)
-                  ]),
-              child: TextField(
-                  decoration: InputDecoration(
-                      hintText: 'Search  ...',
-                      border: InputBorder.none,
-                      suffixIcon: Icon(Icons.search))),
-            )),
-            SizedBox(
-              width: 10.0,
+      body: Column(
+        children: [
+          appbar(),
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 10.0),
+            child: InputSelect(
+              hintText: 'Séléctionner une ville',
+              options: readData(),
+              onChanged: (String newValue) {},
             ),
-            Container(
-              child: GestureDetector(
-                onTap: () {
-                  KeyDrawer.currentState?.openEndDrawer();
-                },
-                child: Icon(
-                  Icons.menu_open,
-                  color: Colors.amberAccent,
-                  size: 50.0,
+          ),
+          Container(
+            padding: EdgeInsets.all(15.0),
+            child: Row(
+              children: [
+                Expanded(child: Search()),
+                Container(
+                  child: GestureDetector(
+                    onTap: () {
+                      KeyDrawer.currentState?.openEndDrawer();
+                    },
+                    child: Icon(
+                      Icons.menu_open,
+                      color: Colors.amberAccent,
+                      size: 50.0,
+                    ),
+                  ),
                 ),
-              ),
+              ],
             ),
-          ]),
-        ),
-        Container(
-          constraints: BoxConstraints(
-            maxHeight: 160,
           ),
-          child: FutureBuilder(
-              future: getCategories(),
-              builder: (BuildContext ctx, AsyncSnapshot<List<Map>> snapshot) {
-                return snapshot.hasData
-                    ? Container(
-                        width: MediaQuery.of(context).size.width,
-                        child: Expanded(
+          Flexible(
+            child: Container(
+              constraints: BoxConstraints(
+                maxHeight: 160,
+              ),
+              child: FutureBuilder(
+                  future: getCategories(),
+                  builder:
+                      (BuildContext ctx, AsyncSnapshot<List<Map>> snapshot) {
+                    return snapshot.hasData
+                        ? Container(
+                            width: MediaQuery.of(context).size.width,
+                            child: ListView.builder(
+                              shrinkWrap: true,
+                              scrollDirection: Axis.horizontal,
+                              itemCount: snapshot.data!.length,
+                              itemBuilder: (BuildContext context, index) {
+                                return MaterialButton(
+                                  onPressed: () {
+                                    Navigator.pushNamed(context, '/Test');
+                                  },
+                                  child: Categories(
+                                      image: snapshot.data![index]['image'],
+                                      nom: snapshot.data![index]['nom']),
+                                );
+                              },
+                            ),
+                          )
+                        : Center(
+                            child: CircularProgressIndicator(),
+                          );
+                  }),
+            ),
+          ),
+          Flexible(
+            child: FutureBuilder<List<Resteau>>(
+                future: getResteau(),
+                builder: (context, snapshot) {
+                  return snapshot.hasData
+                      ? Container(
+                          width: MediaQuery.of(context).size.width,
                           child: ListView.builder(
                             shrinkWrap: true,
-                            scrollDirection: Axis.horizontal,
+                            scrollDirection: Axis.vertical,
                             itemCount: snapshot.data!.length,
                             itemBuilder: (BuildContext context, index) {
+                              final resteauList = snapshot.data!;
                               return MaterialButton(
                                 onPressed: () {
-                                  Navigator.pushNamed(context, '/Menu');
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => Menu_resteau(
+                                          id_resteau: resteauList[index].id),
+                                    ),
+                                  );
                                 },
-                                child: Categories(
-                                    image: snapshot.data![index]['image'],
-                                    nom: snapshot.data![index]['nom']),
+                                child: Restaurants(
+                                  nom: resteauList[index].nom,
+                                  adresse: resteauList[index].adresse,
+                                  description: resteauList[index].description,
+                                  ville: resteauList[index].ville,
+                                  image: resteauList[index].image,
+                                  category_id: resteauList[index].categorie_id,
+                                ),
                               );
                             },
                           ),
-                        ),
-                      )
-                    : Center(
-                        child: CircularProgressIndicator(),
-                      );
-              }),
-        ),
-        FutureBuilder(
-            future: getResteau(),
-            builder: (BuildContext ctx, AsyncSnapshot<List<Map>> snapshot) {
-              return snapshot.hasData
-                  ? Container(
-                      height: 300.0,
-                      width: MediaQuery.of(context).size.width,
-                      child: Expanded(
-                        child: ListView.builder(
-                          shrinkWrap: true,
-                          scrollDirection: Axis.vertical,
-                          itemCount: snapshot.data!.length,
-                          itemBuilder: (BuildContext context, index) {
-                            return MaterialButton(
-                              onPressed: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => Menu_resteau(
-                                        id_resteau: snapshot.data![index]
-                                            ['id']),
-                                  ),
-                                );
-                              },
-                              child: Restaurants(
-                                nom: snapshot.data![index]['nom'],
-                                adresse: snapshot.data![index]['adresse'],
-                                description: snapshot.data![index]
-                                    ['description'],
-                                ville: snapshot.data![index]['ville'],
-                                image: snapshot.data![index]['image'],
-                                category_id: snapshot.data![index]
-                                    ['category_id'],
-                              ),
-                            );
-                          },
-                        ),
-                      ),
-                    )
-                  : Center(
-                      child: CircularProgressIndicator(),
-                    );
-            }),
-      ]),
-      bottomNavigationBar: BottomNavigationBar(
-        selectedItemColor: Colors.redAccent,
-        currentIndex: 0,
-        unselectedItemColor: Colors.grey,
-        selectedFontSize: 14,
-        unselectedFontSize: 12,
-        showSelectedLabels: true,
-        type: BottomNavigationBarType.fixed,
-        items: [
-          BottomNavigationBarItem(
-              icon: Icon(Icons.notifications), label: 'notifications'),
-          BottomNavigationBarItem(
-              icon: Icon(Icons.restaurant_menu_sharp), label: 'menu'),
-          BottomNavigationBarItem(
-              icon: Icon(Icons.shopping_basket), label: 'panier'),
+                        )
+                      : Center(
+                          child: CircularProgressIndicator(),
+                        );
+                }),
+          ),
         ],
       ),
+      bottomNavigationBar: BottomNavigation(),
     );
   }
 }
+
+

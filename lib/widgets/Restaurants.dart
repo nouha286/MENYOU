@@ -20,16 +20,17 @@ class Restaurants extends StatelessWidget {
       required this.category_id});
 
   SqlDb sqlDb = SqlDb();
-Future<String> getCategorie() async {
-  final results = await sqlDb.readData("SELECT nom FROM Categorie WHERE id = ${this.category_id}");
-  final rows = results.toList();
-  if (rows.isEmpty) {
-    return "Without category";
+  Future<String> getCategorie() async {
+    final results = await sqlDb
+        .readData("SELECT nom FROM Categorie WHERE id = ${this.category_id}");
+    final rows = results.toList();
+    if (rows.isEmpty) {
+      return "Without category";
+    }
+    final row = rows.first;
+    final nom = row["nom"] as String;
+    return nom;
   }
-  final row = rows.first;
-  final nom = row["nom"] as String;
-  return nom;
-}
 
   @override
   Widget build(BuildContext context) {

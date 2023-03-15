@@ -8,7 +8,7 @@ class TextBadge extends StatelessWidget {
 
   TextBadge({
     required this.text,
-    this.color = Colors.red,
+    required this.color,
     this.borderRadius = 50,
     this.textStyle = const TextStyle(
       fontSize: 12,
