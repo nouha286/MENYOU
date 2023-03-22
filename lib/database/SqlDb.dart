@@ -1,4 +1,6 @@
+import 'package:menyou/models/Categorie.dart';
 import 'package:menyou/models/Classification.dart';
+
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 
@@ -20,7 +22,7 @@ class SqlDb {
 
   initialDb() async {
     String databasepath = await getDatabasesPath();
-    String path = join(databasepath, 'testeur.db');
+    String path = join(databasepath, 'test5.db');
     Database mydb = await openDatabase(path,
         onCreate: _onCreate, version: 3, onUpgrade: _onUpgrade);
     return mydb;
@@ -57,13 +59,29 @@ class SqlDb {
   FOREIGN KEY (resteau_id) REFERENCES Resteau(id)
   )''');
 
+//  await db.execute('''CREATE TABLE "Commande" (
+//    id INTEGER  PRIMARY KEY,
+//    dateCreation TEXT,
+//    prixTotal REAL,
+//   )''');
+
     print('create succesfuly');
   }
 
   readData(String sql) async {
     Database? mydb = await db;
     List<Map> response = await mydb!.rawQuery(sql);
+
     return response;
+  }
+
+  Future<Map<String, dynamic>> read(String sql) async {
+    Database? mydb = await db;
+    List<Map<String, dynamic>> result = await mydb!.rawQuery(sql);
+    if (result.isEmpty) {
+      throw Exception("No data found");
+    }
+    return result.first;
   }
 
   insertData(String sql) async {
@@ -78,6 +96,11 @@ class SqlDb {
     await mydb.rawQuery("DELETE FROM Categorie");
     await mydb.rawQuery("DELETE FROM Plat");
   }
+
+  // insert(Commande commande) async {
+  //   Database? mydb = await db;
+  //   return await mydb?.insert('Commande', commande.toMap());
+  // }
 
   addData() async {
     Database? mydb = await db;
@@ -106,16 +129,16 @@ VALUES ('${Classification.Entree}', 'Salade Cesar', 'Laitue romaine, croûtons, 
 
     await this.insertData(
         '''INSERT INTO Plat (classification, nom, ingredient, image, resteau_id, prix)
-VALUES ('${Classification.Entree}', 'Salade Cesar', 'Laitue romaine, croûtons, poulet grillé, sauce Cesar', 'images/seffa.jpg', 2, 300.0);
+VALUES ('${Classification.Plat_Principal}', 'Seffa', 'Laitue romaine, croûtons, poulet grillé, sauce Cesar', 'images/seffa.jpg', 2, 300.0);
 ''');
 
     await this.insertData(
         '''INSERT INTO Plat (classification, nom, ingredient, image, resteau_id, prix)
-VALUES ('${Classification.Entree}', 'Salade Cesar', 'Laitue romaine, croûtons, poulet grillé, sauce Cesar', 'images/Kouskous.jpg', 2, 100.0);
+VALUES ('${Classification.Plat_Principal}', 'Kouskous', 'Laitue romaine, croûtons, poulet grillé, sauce Cesar', 'images/Kouskous.jpg', 2, 100.0);
 ''');
     await this.insertData(
         '''INSERT INTO Plat (classification, nom, ingredient, image, resteau_id, prix)
-VALUES ('${Classification.Entree}', 'Salade Cesar', 'Laitue romaine, croûtons, poulet grillé, sauce Cesar', 'images/hum.jpg', 1, 100.0);
+VALUES ('${Classification.Plat_Principal}', 'Humberguer', 'Laitue romaine, croûtons, poulet grillé, sauce Cesar', 'images/hum.jpg', 1, 100.0);
 ''');
     await this.insertData(
         '''INSERT INTO Plat (classification, nom, ingredient, image, resteau_id, prix)

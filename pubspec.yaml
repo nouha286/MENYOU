@@ -13,8 +13,9 @@ dependencies:
   flutter:
     sdk: flutter
   sqflite: ^2.2.5
+  shared_preferences: ^2.0.18
   badges: ^3.0.2
-
+  quickalert:
  
   cupertino_icons: ^1.0.2
  

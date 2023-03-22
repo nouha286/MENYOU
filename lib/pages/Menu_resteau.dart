@@ -172,7 +172,7 @@ class Menu_resteau extends StatelessWidget {
             ),
           ],
         ),
-        bottomNavigationBar: BottomNavigation(),
+         bottomNavigationBar: BottomNavigation(),
       ),
     );
   }

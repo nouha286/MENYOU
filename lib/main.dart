@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:menyou/database/SqlDb.dart';
+import 'package:menyou/models/ArticleDeCommande.dart';
 import 'package:menyou/models/Categorie.dart';
 import 'package:menyou/models/Plat.dart';
 import 'package:menyou/models/Resteau.dart';
@@ -7,9 +8,10 @@ import 'package:menyou/pages/DetailsPlat.dart';
 import 'package:menyou/pages/Favoris.dart';
 import 'package:menyou/pages/Home.dart';
 import 'package:menyou/pages/Menu_resteau.dart';
-import 'package:menyou/pages/Test.dart';
+import 'package:menyou/pages/Panier.dart';
 
 void main() {
+  
   runApp(
     MyApp(),
   );
@@ -39,11 +41,14 @@ class _MyAppState extends State<MyApp> {
         '/': (context) => Home(),
         '/Home': (context) => Home(),
         //'/FoodDetailsPage': (context) => PlatDetailsPage(),
-        '/Test': (context) => Test(),
+
         '/Favoris': (context) => FavoritePlatsPage(['test', 'test']),
+        '/Panier': (context) => PannierPage(),
       },
     );
   }
+
+ 
 
   Future<List<Plat>> getPlat() async {
     final List<Map<String, dynamic>> response =
